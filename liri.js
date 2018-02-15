@@ -1,4 +1,4 @@
-// import { log } from "util";
+
 
 
 var twitterKeys = require ("./keys.js")
@@ -10,52 +10,56 @@ var request = require('request');
 
 var userInput = process.argv[2];
 
+if (userInput == "movie-this"){
+  movieThis()
+}
 
-console.log (userInput)
-switch(userInput){
-    case("myTweets"): myTweets()
-    break;
-    case("spotify-this-song"): mySpotify()
-    break;
-    case("movie-this"): movieThis()
-    break;
-    case("do-what-it-says"): doWhatItSays()
+if (userInput == "spotify-this-song"){
+  mySpotify()
+}
 
+if (userInput == "my-tweets"){
+  myTweets()
+}
+//  myTweets()
+
+//  doWhatItSays()
+
+
+
+
+
+
+function myTweets(){
+
+    var client = new Twitter({
+         consumer_key: 'DhqLaqJYzj7hHPuHLJ2MXQ37x',
+          consumer_secret: 'r6luQXmEktDrhggtj7kiOLDDwn6nxqYkwqIm362uz9OPSR2Y46',
+          access_token_key: '962771941969899520-ZbRYL0QrJa9louaKYEDDwTBOhE6KWIF',
+          access_token_secret: 'BAAqBiom9fhpP3DWuflVzymJ4uM4S4xgszaQxfZ0wXiUk',
+      });
+       
+      var params = {screen_name: 'nodejs'};
+client.get('statuses/user_timeline', params, function(error, tweets, response) {
+  if (!error) {
+    console.log(tweets[0].text);
+  }
+});
 }
 
 
 
 
-// function myTweets({
-
-//     var client = new Twitter({
-//         consumer_key: '',
-//         consumer_secret: '',
-//         access_token_key: '',
-//         access_token_secret: ''
-//       });
-       
-//       var params = {screen_name: 'mayaramnarine'};
-//       client.get('statuses/user_timeline', params, function(error, tweets, response) {
-//         if (!error) {
-//             console.log(tweets);
-//          }
-//         }
-//       });
 
 
-
-
-
-
-function mySpotify(value){
+function mySpotify(){
     
 var spotify = new Spotify({
     id: "aeb690eebc5c44658abe1774f0bc5fcd",
     secret: "a55ff5d5068b41859ce9ecd26236a84c"
   });
    
-  spotify.search({ type: 'track', query: 'The Sign Ace of Base' }, function(err, data) {
+  spotify.search({ type: 'track', query: process.argv[3] }, function(err, data) {
     if (err) {
       return console.log('Error occurred: ' + err);
     }
@@ -73,18 +77,8 @@ var spotify = new Spotify({
 
 
 function movieThis(){
-    request('omdb', function (error, response, body) {
-  console.log('error:', error); // Print the error if one occurred
-  console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-  console.log('body:', body); // Print the HTML for the Google homepage.
-});
-}
 
-if(movieThis){
-    movieThis = "Mr. Nobody"
-};
-
-var queryUrl = "http://www.omdbapi.com/?t=" + movieThis + "&y=&plot=short&apikey=trilogy";
+var queryUrl = "http://www.omdbapi.com/?t=" + process.argv[3] + "&y=&plot=short&apikey=trilogy";
 request(queryUrl, function(error, response, body) {
     console.log("Title: " + JSON.parse(body).Title);
     console.log("Year: " + JSON.parse(body).Year);
@@ -96,3 +90,4 @@ request(queryUrl, function(error, response, body) {
     console.log("Actors: " + JSON.parse(body).Actors);   
 })
 
+}
